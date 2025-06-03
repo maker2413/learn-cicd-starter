@@ -18,5 +18,19 @@ jobs:
         with:
           go-version: "1.23.0"
 
-      - name: Build Prod
+      - name: Build App
         run: ./scripts/buildprod.sh
+
+      - id: Auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Use gcloud CLI
+        run: gcloud info
+
+      - name: Build and push Docker image
+        run: gcloud builds submit --tag us-central1-docker.pkg.dev/serious-cat-461815-v2/notely-ar-repo .
